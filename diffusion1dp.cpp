@@ -99,8 +99,10 @@ void Diffusion1Dp::solver(void)
     averageValue *= 0.5q*h/l;
 
     // Calcula o fluxo de calor
-    heatFlowLeft = -data.k/h*(equationsSystem.getT(1)-equationsSystem.getT(0));
-    heatFlowRight = -data.k/h*(equationsSystem.getT(n-1)-equationsSystem.getT(n-2));
+    //heatFlowLeft = -data.k/h*(equationsSystem.getT(1)-equationsSystem.getT(0));
+    heatFlowLeft = -0.5q*data.k/h*(4.0q*equationsSystem.getT(1)-3.0q*equationsSystem.getT(0)-equationsSystem.getT(2));
+    //heatFlowRight = -data.k/h*(equationsSystem.getT(n-1)-equationsSystem.getT(n-2));
+    heatFlowRight = -0.5q*data.k/h*(3.0q*equationsSystem.getT(n-1)-4.0q*equationsSystem.getT(n-2)+equationsSystem.getT(n-3));
     if(problemType == Aleta)
         heatFlowLeft *= data.Ab;
 

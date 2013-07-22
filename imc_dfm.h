@@ -39,5 +39,10 @@ typedef long int tInteger; // Tipo Inteiro (64 bits)
 #define STR_ALETA "DIFUSÃO DE CALOR EM ALETA: d2T/dx2 = m2*(T-Tinf)"
 #define STR_QML "DIFUSÃO DE QUANTIDADE DE MOVIMENTO LINEAR: mi*d2u/dx2 = C"
 
+std::string print(tFloat value);
+tFloat p_u(tFloat s1, tFloat s2, tFloat s3, tFloat h1, tFloat h2, tFloat h3);
+void GaussSeidel(int n, tFloat *T, tFloat **eq);
+tFloat Residual(int n, tFloat *T, tFloat **eq);
+
 
 #endif // IMC_DFM_H

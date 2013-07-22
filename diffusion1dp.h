@@ -57,12 +57,16 @@ class Diffusion1Dp
         TDMA equationsSystem;
         tFloat  averageValue, maxValue, heatFlowLeft, heatFlowRight;
 
+        Diffusion1Dp(){}
+
         Diffusion1Dp(DiffusionProblem type, tInteger nodes, Boundary1D left, Boundary1D right, DiffusionData data);
 
         void plotSolution(Functor1D &analyticalSolution);
         void printSolution(Functor1D &analyticalSolution);
         void printSecondaryResults(tFloat AS_average = 0.0q, tFloat AS_left = 0.0q, tFloat AS_right = 0.0q,
                                    tFloat AS_left_1 = 0.0q, tFloat AS_right_1 = 0.0q);
+
+        tFloat get_h(){return h;}
 
         void solver(void);
 

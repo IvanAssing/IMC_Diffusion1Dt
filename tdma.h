@@ -11,12 +11,12 @@
 class TDMA
 {
     private:
-        tFloat **equation;
         tInteger neq;
         tInteger nEqMax;
         tFloat *P,*Q,*T;
 
     public:
+        tFloat **equation;
         TDMA(void):nEqMax(0){}
         TDMA(tInteger nEquations);
         void addEquation(tFloat ap, tFloat aw, tFloat ae, tFloat bp);
