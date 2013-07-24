@@ -231,7 +231,7 @@ int main()
     std::cout<<"\n\n\n";
     */
 
-
+    /*
     // >[QUESTÃO 4.4]
     tFloat s0 = -0.5q;
     tFloat s1 = -1.5q;
@@ -240,16 +240,10 @@ int main()
     data.k = 1.0q;
     data.heatSource = new PolynomialQuadratic(s0, s1, s2); // s0 + s1*x + s2*x2
 
-    PolynomialQuartic AS_Temperature_PP(0.0q, 1.0q - s0/2.0q - s1/6.0q - s2/12.0q,
-                                        s0/2.0q, s1/6.0q, s2/12.0q); // solução analítica
-    tFloat AS_tm = 0.5q - s0/12.0q - s1/24.0q - s2/40.0q; // temperatura média
-    tFloat AS_q0 = -1.0q + s0/2.0q + s1/6.0q + s2/12.0q; // fluxo de calor em x=0
-    tFloat AS_ql = -(1.0q + s0/2.0q + s1/3.0q + s2/4.0q); // fluxo de calor em x=1
-
     Boundary1D left(0.0q, Dirichlet, 0.0q); // x=0, Condição de Contorno de Dirichlet, T(0) = 0
     Boundary1D right(1.0q, Dirichlet, 1.0q); // x=1, Condição de Contorno de Dirichlet, T(1) = 1
 
-    int n = 101;
+    int n = 21;
 
     Diffusion1Dp mesh(ParedePlana, n, left, right, data);
 
@@ -264,26 +258,31 @@ int main()
     for(int i=0; i<n; i++)
         T[i] = left.bcValue + _m*(i*_h+left.x);
 
-    int itmax = 1000, it=1;
+    int itmax = 1000000, it=0;
     tFloat *L = new tFloat[itmax];
+    tFloat itol = 1.0e-35q;
 
     L[0] = Residual(n, T, mesh.equationsSystem.equation);
 
+    //std::cout<<"\n"<<0<<"\t"<<static_cast<double>(L[0])<<"\t"<<static_cast<double>(itol);
+
     do{
-        it++;
+        ++it;
         GaussSeidel(n, T, mesh.equationsSystem.equation);
         L[it] = Residual(n, T, mesh.equationsSystem.equation);
 
-    }while(it<itmax);
+        //std::cout<<"\n"<<it<<"\t"<<static_cast<double>(L[it]);
+
+    }while(it<itmax && L[it]>itol);
 
 
-    const std::string cmd_filename = "plotconfig.gnu";
-    const std::string pic_filename = "iteractive.png";
-    const std::string dat1_filename = "data0.txt";
+    const std::string cmd_filename = "plotconfig_it.gnu";
+    const std::string pic_filename = "iteractive_it.png";
+    const std::string dat1_filename = "data_it.txt";
 
     // Solução numérica
     std::ofstream file1(dat1_filename.c_str());
-    for(tInteger i=0; i<n; i++)
+    for(tInteger i=1; i<it; i++)
         file1<<i<<"\t"<<static_cast<double>(L[i]/L[0])<<std::endl;
     file1.close();
 
@@ -293,12 +292,15 @@ int main()
              "set terminal pngcairo enhanced font \"arial,12\" size 1600, 1000 \n"
              "set output '" << pic_filename <<"'\n"
              "set key inside right top vertical Right noreverse enhanced autotitles box linetype -1 linewidth 1.000\n"
-             "set grid\n";
+             "set grid\n"
+             "set logscale y\n"
+             "set format y \"10^{%L}\" \n"
+             "set lmargin 10 \n";
     file3 << "set title \""<<STR_PAREDE_PLANA<<"\\nResolução com MDF / Aproximação com CDS-2\"\n"
-             "set xlabel 'x'\n"
-             "set ylabel 'Temperatura'\n";
+             "set ylabel \"L^{n}/L^{0}\" \n"
+             "set xlabel 'Número de iterações'\n";
 
-    file3 <<"plot '" <<dat1_filename<<"' t\"Solução Analítica\" with lines lt 2 lc 2 lw 2";
+    file3 <<"plot '" <<dat1_filename<<"' t\"\" with lines lt 2 lc 1 lw 1";
     file3.close();
 
     const std::string cmd1 = "gnuplot " + cmd_filename; // Gráfico com GNUPLOT
@@ -309,6 +311,76 @@ int main()
 
 
     // <[QUESTÃO 4.4]
+*/
 
+    // >[QUESTÃO 4.5]
+    DiffusionData data;
+    data.k = 1.0q;
+    data.heatSource = new PolynomialConstant(0.0q); // s0 + s1*x + s2*x2
+
+    PolynomialLinear AS_T(0.0q, 1.0q); // solução analítica
+
+    Boundary1D left(0.0q, Dirichlet, 0.0q); // x=0, Condição de Contorno de Dirichlet, T(0) = 0
+    Boundary1D right(1.0q, Dirichlet, 1.0q); // x=1, Condição de Contorno de Dirichlet, T(1) = 1
+
+    int nmax = 10000000;
+
+    int itmax = log10(nmax);
+
+    std::cout<<"\n"<<itmax<<"\t"<<nmax;
+
+    tFloat *erro = new tFloat[itmax];
+
+    int n =10;
+
+    for(int i=0; i<itmax; i++, n*=10){
+
+        Diffusion1Dp mesh(ParedePlana, n+1, left, right, data);
+
+        mesh.solver();
+
+        erro[i] = fabsq(0.5q - mesh.equationsSystem.getT(n/2+1));
+
+        std::cout<<"\n"<<i<<"\t"<<static_cast<double>(erro[i])<<"\t"<<n+1;
+
+    }
+
+
+    const std::string cmd_filename = "plotconfig_45.gnu";
+    const std::string pic_filename = "iteractive_45.png";
+    const std::string dat1_filename = "data_45.txt";
+
+    // Solução numérica
+    std::ofstream file1(dat1_filename.c_str());
+    for(tInteger i=1; i<itmax; i++)
+        file1<<1.0/pow(10., i)<<"\t"<<static_cast<double>(erro[i])<<std::endl;
+    file1.close();
+
+
+    std::ofstream file3(cmd_filename.c_str());
+    file3 <<
+             "set terminal pngcairo enhanced font \"arial,12\" size 1600, 1000 \n"
+             "set output '" << pic_filename <<"'\n"
+             "set key inside right top vertical Right noreverse enhanced autotitles box linetype -1 linewidth 1.000\n"
+             "set grid\n"
+             "set logscale xy\n"
+             "set format y \"10^{%L}\" \n"
+             "set format x \"10^{%L}\" \n"
+             "set lmargin 10 \n";
+    file3 << "set title \""<<STR_PAREDE_PLANA<<"\\nResolução com MDF / Aproximação com CDS-2\"\n"
+             "set ylabel \"L^{n}/L^{0}\" \n"
+             "set xlabel 'Número de iterações'\n";
+
+    file3 <<"plot '" <<dat1_filename<<"' t\"\" with linespoints lt 2 lc 4 lw 2";
+    file3.close();
+
+    const std::string cmd1 = "gnuplot " + cmd_filename; // Gráfico com GNUPLOT
+    const std::string cmd2 = "eog " + pic_filename; // Visualizador de imagem
+
+    std::system(cmd1.c_str());
+    std::system(cmd2.c_str());
+
+
+    // <[QUESTÃO 4.5]
 }
 

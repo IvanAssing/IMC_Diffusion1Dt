@@ -12,7 +12,7 @@ extern "C" {
 #include "quadmath.h" // Biblioteca para Precisão Quadrúpla
 }
 
-#define QUAD_PRECISION // Ativar para habilitar Precisão Quadrúpla
+//#define QUAD_PRECISION // Ativar para habilitar Precisão Quadrúpla
 
 #ifdef QUAD_PRECISION
 typedef __float128 tFloat; // Tipo Ponto flutuante com precisão Quadrúpla (128 bits)
