@@ -25,10 +25,18 @@ tFloat Residual(int n, tFloat *T, tFloat **eq)
     tFloat r = 0.0q;
     r += fabsq(eq[0][2]*T[1] + eq[0][2] - eq[0][0]*T[0]);
     for(int i=1; i<n-1; i++)
-         r += fabsq(eq[i][1]*T[i-1] + eq[i][2]*T[i+1] + eq[i][2] - eq[i][0]*T[i]);
+        r += fabsq(eq[i][1]*T[i-1] + eq[i][2]*T[i+1] + eq[i][2] - eq[i][0]*T[i]);
     r+= fabsq(eq[n-1][1]*T[n-2] + eq[n-1][2] - eq[n-1][0]*T[n-1]);
 
     return r;
+}
+
+tFloat Ugci(tFloat s1, tFloat s2, tFloat q, tFloat pu, tFloat pl, tFloat Fs)
+{
+    if(pu<pl)
+        return Fs*fabsq(s1-s2)/(powq(q,pu)-1.0q);
+    else
+        return Fs*fabsq(s1-s2)/(powq(q,pl)-1.0q);
 }
 
 
