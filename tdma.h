@@ -10,7 +10,7 @@
 // Classe para resolução de Sistema de Equações Lineares tipo TDMA
 class TDMA
 {
-    private:
+    public:
         tInteger neq;
         tInteger nEqMax;
         tFloat *P,*Q,*T;
@@ -23,8 +23,6 @@ class TDMA
         void operator ()(tFloat ap, tFloat aw, tFloat ae, tFloat bp);
 
         void solver(void);
-        void printCoefficients(void);
-        void printSolution(void);
         void setMaxEquations(tInteger nEquations);
 
         inline tFloat getP(tInteger i) { return P[i];}
@@ -38,6 +36,8 @@ class TDMA
         inline tFloat getAp(tInteger i) { return equation[i][0];}
         inline tFloat getAe(tInteger i) { return equation[i][2];}
         inline tFloat getBp(tInteger i) { return equation[i][3];}
+
+        void setBp(tInteger i, tFloat bp) { equation[i][3] = bp;}
 
     public:
         virtual ~TDMA();

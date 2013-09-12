@@ -15,7 +15,6 @@ TDMA::TDMA(tInteger n):nEqMax(n+2)
     // Aloca vetores
     P = new tFloat[nEqMax];
     Q = new tFloat[nEqMax];
-    T = new tFloat[nEqMax];
 }
 
 // Redimensiona tamanho esperado para o sistema
@@ -24,7 +23,6 @@ void TDMA::setMaxEquations(tInteger n)
     if(nEqMax){
         delete P;
         delete Q;
-        delete T;
 
         for(tInteger p=0;p<nEqMax;p++)
             delete equation[p];
@@ -41,7 +39,6 @@ void TDMA::setMaxEquations(tInteger n)
 
     P = new tFloat[nEqMax];
     Q = new tFloat[nEqMax];
-    T = new tFloat[nEqMax];
 }
 
 
@@ -73,51 +70,6 @@ void TDMA::operator()(tFloat ap,tFloat aw,tFloat ae,tFloat bp)
 }
 
 
-// Imprimir coeficientes
-void TDMA::printCoefficients(void)
-{
-    std::cout<<std::endl<<std::endl;
-    std::cout<<std::endl<<std::setfill('-')<<std::setw(5+4*OUT_FLOAT_WIDTH)<<""<<std::setfill(' ');
-    std::cout<<std::endl<<std::setw(5)<<std::right<<"p";
-    std::cout<<std::setw(OUT_FLOAT_WIDTH)<<std::right<<"ap";
-    std::cout<<std::setw(OUT_FLOAT_WIDTH)<<std::right<<"aw";
-    std::cout<<std::setw(OUT_FLOAT_WIDTH)<<std::right<<"ae";
-    std::cout<<std::setw(OUT_FLOAT_WIDTH)<<std::right<<"bp";
-    std::cout<<std::endl<<std::setfill('-')<<std::setw(5+4*OUT_FLOAT_WIDTH)<<""<<std::setfill(' ');
-
-    std::cout.precision(OUT_FLOAT_PRECISION);
-    std::cout<<std::scientific;
-
-
-#ifdef QUAD_PRECISION
-    char str[1000];
-    for(tInteger i=0;i<neq;i++){
-        std::cout<<std::endl;
-        std::cout<<std::setw(5)<<i;
-        quadmath_snprintf(str, 1000, Q_FORMAT,equation[i][0]);
-        std::cout<<std::setw(OUT_FLOAT_WIDTH)<<str;
-        quadmath_snprintf(str, 1000, Q_FORMAT,equation[i][1]);
-        std::cout<<std::setw(OUT_FLOAT_WIDTH)<<str;
-        quadmath_snprintf(str, 1000, Q_FORMAT,equation[i][2]);
-        std::cout<<std::setw(OUT_FLOAT_WIDTH)<<str;
-        quadmath_snprintf(str, 1000, Q_FORMAT,equation[i][3]);
-        std::cout<<std::setw(OUT_FLOAT_WIDTH)<<str;
-    }
-    std::cout<<std::endl<<std::setfill('-')<<std::setw(5+4*OUT_FLOAT_WIDTH)<<""<<std::setfill(' ');
-#else
-    for(tInteger i=0;i<neq;i++){
-        std::cout<<std::endl;
-        std::cout<<std::setw(5)<<i;
-        std::cout<<std::setw(OUT_FLOAT_WIDTH)<<equation[i][0];
-        std::cout<<std::setw(OUT_FLOAT_WIDTH)<<equation[i][1];
-        std::cout<<std::setw(OUT_FLOAT_WIDTH)<<equation[i][2];
-        std::cout<<std::setw(OUT_FLOAT_WIDTH)<<equation[i][3];
-    }
-    std::cout<<std::endl<<std::setfill('-')<<std::setw(5+4*OUT_FLOAT_WIDTH)<<""<<std::setfill(' ');
-#endif
-}
-
-
 // Solver do sistema TDMA
 void TDMA::solver(void)
 {
@@ -141,53 +93,13 @@ void TDMA::solver(void)
 }
 
 
-// Imprime solução na tela
-void TDMA::printSolution(void)
-{
-    std::cout<<std::endl;
-    std::cout<<std::endl<<std::setfill('-')<<std::setw(5+3*OUT_FLOAT_WIDTH)<<""<<std::setfill(' ');
-    std::cout<<std::endl<<std::setw(5)<<std::right<<"p";
-    std::cout<<std::setw(OUT_FLOAT_WIDTH)<<std::right<<"Pp";
-    std::cout<<std::setw(OUT_FLOAT_WIDTH)<<std::right<<"Qp";
-    std::cout<<std::setw(OUT_FLOAT_WIDTH)<<std::right<<"Tp";
-    std::cout<<std::endl<<std::setfill('-')<<std::setw(5+3*OUT_FLOAT_WIDTH)<<""<<std::setfill(' ');
-
-    std::cout.precision(OUT_FLOAT_PRECISION);
-    std::cout<<std::scientific;
-
-#ifdef QUAD_PRECISION
-    char str[1000];
-    for(tInteger i=0;i<neq;i++){
-        std::cout<<std::endl;
-        std::cout<<std::setw(5)<<i;
-        quadmath_snprintf(str, 1000, Q_FORMAT,P[i]);
-        std::cout<<std::setw(OUT_FLOAT_WIDTH)<<str;
-        quadmath_snprintf(str, 1000, Q_FORMAT,Q[i]);
-        std::cout<<std::setw(OUT_FLOAT_WIDTH)<<str;
-        quadmath_snprintf(str, 1000, Q_FORMAT,T[i]);
-        std::cout<<std::setw(OUT_FLOAT_WIDTH)<<str;
-    }
-    std::cout<<std::endl<<std::setfill('-')<<std::setw(5+3*OUT_FLOAT_WIDTH)<<""<<std::setfill(' ');
-#else
-    for(tInteger i=0;i<neq;i++){
-        std::cout<<std::endl;
-        std::cout<<std::setw(5)<<i;
-        std::cout<<std::setw(OUT_FLOAT_WIDTH)<<P[i];
-        std::cout<<std::setw(OUT_FLOAT_WIDTH)<<Q[i];
-        std::cout<<std::setw(OUT_FLOAT_WIDTH)<<T[i];
-    }
-    std::cout<<std::endl<<std::setfill('-')<<std::setw(5+3*OUT_FLOAT_WIDTH)<<""<<std::setfill(' ');
-#endif
-}
-
-
 // Libera memória alocada pelo objeto
 TDMA::~TDMA()
 {
     if(nEqMax){
         delete P;
         delete Q;
-        delete T;
+        //delete T;
 
         for(tInteger p=0;p<nEqMax;p++)
             delete equation[p];

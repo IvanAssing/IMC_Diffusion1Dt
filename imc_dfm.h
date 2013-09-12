@@ -36,16 +36,19 @@ typedef long int tInteger; // Tipo Inteiro (64 bits)
 #define OUT_FLOAT_WIDTH (OUT_FLOAT_PRECISION+10)
 #define OUT_TXT 10
 
-#define STR_PAREDE_PLANA "DIFUSÃO DE CALOR EM PAREDE PLANA: d2T/dx2 = S(x)"
-#define STR_ALETA "DIFUSÃO DE CALOR EM ALETA: d2T/dx2 = m2*(T-Tinf)"
-#define STR_QML "DIFUSÃO DE QUANTIDADE DE MOVIMENTO LINEAR: mi*d2u/dx2 = C"
-#define STR_THERMOELASTICITY "TERMOELASTICIDADE LINEAR UNIDIMENSIONAL PERMANENTE"
+#define STR_PAREDE_PLANA "DIFUSÃO DE CALOR EM PAREDE PLANA EM REGIME TRANSIENTE"
 
-std::string print(tFloat value);
+
 tFloat p_u(tFloat s1, tFloat s2, tFloat s3, tFloat h1, tFloat h2, tFloat h3);
 void GaussSeidel(int n, tFloat *T, tFloat **eq);
 tFloat Residual(int n, tFloat *T, tFloat **eq);
 tFloat Ugci(tFloat s1, tFloat s2, tFloat q, tFloat pu, tFloat pl = 2.0q, tFloat Fs = 3.0q);
+
+
+#define QtoD(value) static_cast<double>(value)
+
+std::string print(tFloat value); // 33 casas
+std::string print2(tFloat value); // 3 casas
 
 
 #endif // IMC_DFM_H

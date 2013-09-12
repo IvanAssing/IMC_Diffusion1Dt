@@ -7,6 +7,16 @@ std::string print(tFloat value)
     return std::string(str);
 }
 
+std::string print2(tFloat value)
+{
+    char str[1000];
+    quadmath_snprintf(str, 1000, "%.3Qe",value);
+    return std::string(str);
+}
+
+
+
+
 tFloat p_u(tFloat s1, tFloat s2, tFloat s3, tFloat h1, tFloat h2, tFloat h3)
 {
     return logq((s2-s3)/(s1-s2))/logq(h3/h2);

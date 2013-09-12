@@ -56,50 +56,45 @@ class PolynomialQuartic : public Functor1D
         virtual tFloat operator()(tFloat x);
 };
 
-// Objeto Função para Temperatura Analítica em Aleta
-class SpecialFunctorTA : public Functor1D
+
+
+class Sine : public Functor1D
 {
     public:
-        tFloat k;
-        tFloat H;
-        tFloat Tinf;
-        tFloat Tb;
-        tFloat Ab;
-        tFloat P;
-        tFloat L;
-        tFloat m;
+        tFloat a, b, c;
 
-        SpecialFunctorTA(tFloat k,
-                         tFloat H,
-                         tFloat Tinf,
-                         tFloat Tb,
-                         tFloat Ab,
-                         tFloat P,
-                         tFloat L);
-        virtual tFloat operator()(tFloat x);
+        Sine(tFloat _a, tFloat _b, tFloat _c):a(_a), b(_b), c(_c){}
+
+        tFloat operator()(tFloat x)
+        {
+            return a*sinq(b*x+c);
+        }
 };
 
-// Objeto Função para Fluxo de Calor Analítico em Aleta
-class SpecialFunctorQA : public Functor1D
+class SpecialFunctorTxt : public Functor1D
 {
     public:
-        tFloat k;
-        tFloat H;
-        tFloat Tinf;
-        tFloat Tb;
-        tFloat Ab;
-        tFloat P;
-        tFloat L;
-        tFloat m;
+        tFloat a, b, c;
 
-        SpecialFunctorQA(tFloat k,
-                         tFloat H,
-                         tFloat Tinf,
-                         tFloat Tb,
-                         tFloat Ab,
-                         tFloat P,
-                         tFloat L);
-        virtual tFloat operator()(tFloat x);
+        SpecialFunctorTxt(tFloat _a, tFloat _b, tFloat _c):a(_a), b(_b), c(_c){}
+
+        tFloat operator()(tFloat x)
+        {
+            return a*sinq(b*x)*expq(c);
+        }
+};
+
+class SpecialFunctorTm : public Functor1D
+{
+    public:
+        tFloat a, b;
+
+        SpecialFunctorTm(tFloat _a, tFloat _b):a(_a), b(_b){}
+
+        tFloat operator()(tFloat x)
+        {
+            return a*expq(b*x);
+        }
 };
 
 #endif // FUNCTOR1D_H
